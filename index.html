@@ -1,0 +1,363 @@
+<!DOCTYPE html 
+<!DOCTYPE html>
+<html 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alô Fácil</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef6ff;
+  color: #12345a;
+}
+header {
+  background: #0879ce;
+  color: white;
+  padding: 24px 15px;
+  text-align: center;
+  border-radius: 0 0 22px 22px;
+}
+header h1 { font-size: 32px; margin: 0 0 8px; }
+header p { font-size: 17px; margin: 0; }
+main { max-width: 520px; margin: auto; padding: 16px; }
+h2 { font-size: 23px; }
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 17px;
+  box-shadow: 0 3px 12px #12345a15;
+}
+button {
+  border: 0;
+  border-radius: 13px;
+  padding: 16px;
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.help {
+  background: #f12f37;
+  color: white;
+  width: 100%;
+  padding: 25px 10px;
+  font-size: 25px;
+}
+.add {
+  background: #0879ce;
+  color: white;
+  width: 100%;
+  margin-top: 12px;
+}
+.call {
+  background: #13a34a;
+  color: white;
+  width: 100%;
+  margin-top: 10px;
+}
+.emergency {
+  background: #e82d36;
+  color: white;
+  width: 100%;
+}
+.remove {
+  background: #e7eef6;
+  color: #17344f;
+  width: 100%;
+  margin-top: 8px;
+}
+input, select, textarea {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  border: 2px solid #c5d8eb;
+  border-radius: 11px;
+  margin: 8px 0 15px;
+}
+label { font-size: 18px; font-weight: bold; }
+.contact {
+  border: 1px solid #dce8f4;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 12px;
+  box-shadow: 0 2px 8px #00000008;
+}
+.contact strong { font-size: 23px; }
+.contact p { font-size: 17px; margin: 8px 0; }
+.avatar {
+  background: #e5f2ff;
+  color: #0879ce;
+  border-radius: 50%;
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.emergency-box {
+  background: #fff0f0;
+  border-radius: 16px;
+  padding: 16px;
+}
+nav {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  position: sticky;
+  bottom: 0;
+  padding: 10px 2px;
+  box-shadow: 0 -3px 10px #00000012;
+}
+nav button {
+  background: white;
+  color: #486887;
+  font-size: 13px;
+  padding: 8px 4px;
+}
+nav button span { display: block; font-size: 23px; }
+nav button.active { color: #0879ce; }
+.page { display: none; }
+.page.active { display: block; }
+.note { font-size: 15px; color: #526a80; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>☎️ Alô Fácil</h1>
+  <p>Seus contatos sempre à mão</p>
+</header>
+
+<main>
+  <section id="inicio" class="page active">
+    <div class="card">
+      <h2>Olá! Como podemos ajudar?</h2>
+      <button class="help" onclick="pedirAjuda()">
+        🆘 PEDIR AJUDA
+      </button>
+      <p id="status" class="note" aria-live="polite">
+        Aplicativo pronto para usar.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>👥 Meus contatos</h2>
+      <div id="resumo"></div>
+      <button class="add" onclick="irPara('contatos')">
+        ➕ Adicionar contato
+      </button>
+    </div>
+
+    <div class="emergency-box">
+      <h2>🚑 Emergência</h2>
+      <p>SAMU - Serviço de Atendimento Móvel de Urgência</p>
+      <button class="emergency" onclick="ligar('192')">
+        ☎️ LIGAR 192
+      </button>
+    </div>
+  </section>
+
+  <section id="contatos" class="page">
+    <div class="card">
+      <h2>👥 Meus contatos</h2>
+      <label for="nome">Nome da pessoa</label>
+      <input id="nome" placeholder="Ex.: Maria">
+      <label for="telefone">Número de telefone</label>
+      <input id="telefone" type="tel"
+        placeholder="(51) 99999-9999">
+      <button class="add" onclick="adicionar()">
+        ➕ Salvar contato
+      </button>
+    </div>
+    <div class="card">
+      <h2>📞 Contatos cadastrados</h2>
+      <div id="lista"></div>
+    </div>
+  </section>
+
+  <section id="config" class="page">
+    <div class="card">
+      <h2>⚙️ Configurações</h2>
+      <label for="letras">Tamanho das letras</label>
+      <select id="letras" onchange="mudarLetras(this.value)">
+        <option value="16px">Normal</option>
+        <option value="20px">Grande</option>
+        <option value="24px">Muito grande</option>
+      </select>
+      <label for="orientacoes">Orientações pessoais</label>
+      <textarea id="orientacoes" rows="4"
+        placeholder="Escreva orientações..."></textarea>
+      <button class="add" onclick="salvarOrientacoes()">
+        Salvar configurações
+      </button>
+      <p id="salvo" class="note"></p>
+    </div>
+  </section>
+
+  <section id="sobre" class="page">
+    <div class="card">
+      <h2>ℹ️ Sobre o Alô Fácil</h2>
+      <p style="font-size:19px">
+        O Alô Fácil ajuda a manter os contatos importantes
+        sempre à mão, com uma interface simples e acessível.
+      </p>
+      <p class="note">
+        Versão de teste. Os contatos ficam salvos apenas
+        neste navegador.
+      </p>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button class="active" onclick="irPara('inicio',this)">
+    <span>🏠</span>Início
+  </button>
+  <button onclick="irPara('contatos',this)">
+    <span>👥</span>Contatos
+  </button>
+  <button onclick="irPara('config',this)">
+    <span>⚙️</span>Configurações
+  </button>
+  <button onclick="irPara('sobre',this)">
+    <span>ℹ️</span>Sobre
+  </button>
+</nav>
+
+<script>
+let contatos = [];
+try {
+  contatos = JSON.parse(localStorage.getItem("aloFacil")) || [];
+} catch(e) { contatos = []; }
+
+function salvar() {
+  localStorage.setItem("aloFacil", JSON.stringify(contatos));
+  mostrar();
+}
+
+function adicionar() {
+  const nome = document.getElementById("nome").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const digitos = telefone.replace(/\D/g, "");
+
+  if (!nome || digitos.length < 8) {
+    alert("Digite um nome e um telefone válido.");
+    return;
+  }
+
+  contatos.push({nome, telefone});
+  salvar();
+  document.getElementById("nome").value = "";
+  document.getElementById("telefone").value = "";
+  alert("Contato adicionado!");
+}
+
+function ligar(numero) {
+  const tel = numero.replace(/[^\d+]/g, "");
+  if (!tel) {
+    alert("Número inválido.");
+    return;
+  }
+  window.location.href = "tel:" + tel;
+}
+
+function pedirAjuda() {
+  if (!contatos.length) {
+    alert("Adicione um contato de confiança primeiro.");
+    irPara("contatos");
+    return;
+  }
+  if (confirm("Deseja ligar para " + contatos[0].nome + "?")) {
+    ligar(contatos[0].telefone);
+  }
+}
+
+function mostrar() {
+  const lista = document.getElementById("lista");
+  const resumo = document.getElementById("resumo");
+  lista.innerHTML = "";
+  resumo.innerHTML = "";
+
+  if (!contatos.length) {
+    lista.textContent = "Nenhum contato cadastrado.";
+    resumo.textContent = "Adicione um contato de confiança.";
+    return;
+  }
+
+  contatos.forEach((c, i) => {
+    const criar = (compacto) => {
+      const div = document.createElement("div");
+      div.className = "contact";
+      const nome = document.createElement("strong");
+      nome.textContent = "👤 " + c.nome;
+      const telefone = document.createElement("p");
+      telefone.textContent = "☎️ " + c.telefone;
+      div.append(nome, telefone);
+
+      const call = document.createElement("button");
+      call.className = "call";
+      call.textContent = "📞 LIGAR";
+      call.onclick = () => ligar(c.telefone);
+      div.appendChild(call);
+
+      if (!compacto) {
+        const del = document.createElement("button");
+        del.className = "remove";
+        del.textContent = "🗑️ Excluir contato";
+        del.onclick = () => {
+          if (confirm("Excluir " + c.nome + "?")) {
+            contatos.splice(i, 1);
+            salvar();
+          }
+        };
+        div.appendChild(del);
+      }
+      return div;
+    };
+    resumo.appendChild(criar(true));
+    lista.appendChild(criar(false));
+  });
+}
+
+function irPara(id, btn) {
+  document.querySelectorAll(".page").forEach(p =>
+    p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b =>
+    b.classList.remove("active"));
+  const buttons = [...document.querySelectorAll("nav button")];
+  const index = ["inicio","contatos","config","sobre"].indexOf(id);
+  buttons[index].classList.add("active");
+  if (id === "contatos") mostrar();
+}
+
+function mudarLetras(tamanho) {
+  document.body.style.fontSize = tamanho;
+  localStorage.setItem("aloLetras", tamanho);
+}
+
+function salvarOrientacoes() {
+  localStorage.setItem("aloOrientacoes",
+    document.getElementById("orientacoes").value);
+  document.getElementById("salvo").textContent =
+    "Orientações salvas!";
+}
+
+document.getElementById("letras").value =
+  localStorage.getItem("aloLetras") || "16px";
+mudarLetras(document.getElementById("letras").value);
+document.getElementById("orientacoes").value =
+  localStorage.getItem("aloOrientacoes") || "";
+mostrar();
+</script>
+</body>
+</html>
